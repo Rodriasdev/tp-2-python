@@ -28,14 +28,14 @@ except MySQLdb.error as e:
 
 
 
-if not os.path.exists('LocalidadesxDepartementos'):
-    os.makedirs('LocalidadesxDepartementos')
+if not os.path.exists('LocalidadesxProvincias'):
+    os.makedirs('LocalidadesxProvincias')
 
 registro_provincias=set()
 for localidad in localidades: 
     provincia=localidad[3]
     csv_file = provincia+".csv"
-    with open("LocalidadesxDepartementos/"+csv_file, 'a', newline='') as file:
+    with open("LocalidadesxProvincias/"+csv_file, 'a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(localidad)
 

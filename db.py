@@ -3,7 +3,7 @@ import sys
 
 def connectdb():
     try:
-        db = MySQLdb.connect("localhost","root","","localidades2" )
+        db = MySQLdb.connect("localhost","root","","localidades" )
         cursor = db.cursor()
         print("Conexión correcta.")
         return cursor,db

@@ -2,6 +2,8 @@ import MySQLdb
 import sys
 from db import connectdb
 from getCsv import get_csv
+import csv
+import os
 
 cursor,db = connectdb()
 
@@ -16,11 +18,26 @@ except MySQLdb.error as e:
 
 get_csv(cursor,db)
 
-    
+
+try:
+    cursor.execute("SELECT localidades.id, localidades.nombre, provincias.id AS provincias_id, provincias.nombre AS provincia_nombre FROM localidades INNER JOIN provincias ON localidades.provincia_id = provincias.id")
+    localidades=cursor.fetchall()
+except MySQLdb.error as e:
+    print(e)
+    sys.exit(1)
 
 
-    
 
+if not os.path.exists('LocalidadesxDepartementos'):
+    os.makedirs('LocalidadesxDepartementos')
+
+registro_provincias=set()
+for localidad in localidades: 
+    provincia=localidad[3]
+    csv_file = provincia+".csv"
+    with open("LocalidadesxDepartementos/"+csv_file, 'a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(localidad)
 
     
 

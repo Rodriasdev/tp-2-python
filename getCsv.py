@@ -41,8 +41,9 @@ def get_csv(cursor,db):
                         for provincia in registro_provincias:
                             id_provincia= provincia[0]
                             nombre_provincia=provincia[1]
+                            cp=row[3]
                             if row[0] == nombre_provincia:
-                                cursor.execute("INSERT INTO localidades(nombre,provincia_id) VALUES (%s,%s)", (localidad,id_provincia))
+                                cursor.execute("INSERT INTO localidades(nombre,cp,provincia_id) VALUES (%s,%s,%s)", (localidad,cp,id_provincia))
                                 db.commit()
                                 localidades_insertadas.add(localidad)  
                 except MySQLdb.Error as e:

@@ -1,6 +1,6 @@
 import csv
 
-def get_csv(cursor,db):
+def get_csv():
     with open('localidades.csv', newline='') as archivo:
         lector_csv= csv.reader(archivo, delimiter=',', quotechar='"')
         provincias = []  

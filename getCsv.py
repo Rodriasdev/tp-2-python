@@ -1,52 +1,21 @@
 import csv
-import MySQLdb
-import sys
 
 def get_csv(cursor,db):
     with open('localidades.csv', newline='') as archivo:
         lector_csv= csv.reader(archivo, delimiter=',', quotechar='"')
-        localidades_insertadas = set()
-        provincias_insertadas = set()  
+        provincias = []  
+        localidades = []
 
         for row in lector_csv:
             provincia = row[0]
-            if provincia not in provincias_insertadas:
-                try:
+            if [provincia] not in provincias:
                     if provincia != 'provincia':
-                        cursor.execute("INSERT INTO provincias(nombre) VALUES (%s)", (provincia,))
-                        db.commit()
-                        provincias_insertadas.add(provincia)
-                    
-                except MySQLdb.Error as e:
-                    print("Error al insertar la provincia", provincia, ":", e)
-                    db.rollback()
-                    sys.exit(1)
-            
-        try: 
-            cursor.execute("SELECT * FROM provincias")
-            registro_provincias = cursor.fetchall()
-        except MySQLdb.error as e:
-            print(e)
-            db.rollback()
-            sys.exit(1)
 
-        archivo.seek(0)
-        lector_csv = csv.reader(archivo, delimiter=',', quotechar='"')
+                        provincias.append([provincia])
+            if provincia != 'provincia':
+                localidades.append([row[2],row[3],row[0]])
+        localidades.pop(0)
 
-        for row in lector_csv:
-            localidad = row[2]
-            if localidad not in localidades_insertadas:
-                try:
-                    if localidad != 'localidad':
-                        for provincia in registro_provincias:
-                            id_provincia= provincia[0]
-                            nombre_provincia=provincia[1]
-                            cp=row[3]
-                            if row[0] == nombre_provincia:
-                                cursor.execute("INSERT INTO localidades(nombre,cp,provincia_id) VALUES (%s,%s,%s)", (localidad,cp,id_provincia))
-                                db.commit()
-                                localidades_insertadas.add(localidad)  
-                except MySQLdb.Error as e:
-                    print("Error al insertar la provincia", localidad, ":", e)
-                    db.rollback()
-                    sys.exit(1)
+
+        return provincias,localidades
+
